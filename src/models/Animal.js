@@ -44,6 +44,8 @@ const createAnimal = async (animalData) => {
         caractere: animalData.caractere || null,
         besoins_specifiques: animalData.besoins_specifiques || null,
         photo_url: animalData.photo_url || null,
+        sexe: animalData.sexe || null,
+        infos_veterinaire: animalData.infos_veterinaire || null,
       },
     ])
     .select()
