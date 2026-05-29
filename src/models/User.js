@@ -1,4 +1,5 @@
 const { supabase } = require('../config/supabase');
+const { supabaseAdmin } = require('../config/supabase');
 const { NotFoundError, ConflictError } = require('../utils/errorHandler');
 
 // Récupérer un utilisateur par ID
@@ -30,7 +31,7 @@ const getAllUsers = async (limit = 50, offset = 0) => {
 
 // Créer un utilisateur (profil après inscription Supabase Auth)
 const createUser = async (userId, userData) => {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('utilisateurs')
     .insert([
       {

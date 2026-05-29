@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { errorHandler } = require('./utils/errorHandler');
 
 const app = express();
@@ -15,9 +16,11 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date() });
 });
+// Test UI - TEMPORARY
+app.use('/test', express.static(path.join(__dirname, '../temp_tests')));
 
-// Routes will be added here
-// app.use('/api/auth', require('./routes/auth'));
+// Routes
+app.use('/api/auth', require('./routes/authRoutes'));
 // app.use('/api/users', require('./routes/users'));
 // app.use('/api/animals', require('./routes/animals'));
 // app.use('/api/reservations', require('./routes/reservations'));
