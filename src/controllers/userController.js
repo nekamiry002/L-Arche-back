@@ -16,15 +16,15 @@ const getMe = async (req, res, next) => {
 const updateMe = async (req, res, next) => {
   try {
     const userId = req.user.sub || req.user.id;
-    
+
     // Filtrer les champs autorisés pour une auto-mise à jour
     const allowedUpdates = [
-      'nom', 'prenom', 'ville', 'telephone', 'avatar_url', 
-      'description_gardien', 'experience_animaux', 'type_logement', 
+      'nom', 'prenom', 'ville', 'telephone', 'avatar_url',
+      'description_gardien', 'experience_animaux', 'type_logement',
       'jardin', 'animaux_acceptes', 'latitude', 'longitude', 'est_gardien',
       'description', 'tarif', 'type_de_garde', 'images_logement'
     ];
-    
+
     const updates = {};
     Object.keys(req.body).forEach(key => {
       if (allowedUpdates.includes(key)) {
