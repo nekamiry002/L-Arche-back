@@ -127,6 +127,18 @@ const validateCreateAnimal = (data) => {
     errors.poids = 'Poids doit être positif et <= 500 kg';
   }
 
+  if (data.sexe !== undefined && data.sexe !== null) {
+    if (typeof data.sexe !== 'string') {
+      errors.sexe = 'Le sexe doit être une chaîne de caractères';
+    }
+  }
+
+  if (data.infos_veterinaire !== undefined && data.infos_veterinaire !== null) {
+    if (typeof data.infos_veterinaire !== 'string') {
+      errors.infos_veterinaire = 'Les informations vétérinaires doivent être du texte';
+    }
+  }
+
   if (Object.keys(errors).length > 0) {
     throw new ValidationError('Erreurs de validation', errors);
   }
