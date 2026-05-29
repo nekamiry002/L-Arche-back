@@ -22,7 +22,8 @@ app.use('/test', express.static(path.join(__dirname, '../temp_tests')));
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
-// app.use('/api/animals', require('./routes/animals'));
+app.use('/api/animals', require('./routes/animalRoutes'));
+app.use('/api/species', require('./routes/especeRoutes'));
 // app.use('/api/reservations', require('./routes/reservations'));
 
 // Error handling middleware (doit être en dernier)
