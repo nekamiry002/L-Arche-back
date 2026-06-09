@@ -1,17 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/userController');
+const gardienController = require('../controllers/gardienController');
 const { authenticateToken } = require('../middleware/auth');
 
-// Toutes les routes utilisateurs nécessitent d'être connecté
-router.use(authenticateToken);
+// Routes gardiens (accessibles connecté)
+router.get('/gardiens', authenticateToken, gardienController.searchGardiens);
+router.get('/gardiens/:id', authenticateToken, gardienController.getGardienProfile);
 
 // Profil personnel
-router.get('/me', userController.getMe);
-router.patch('/me', userController.updateMe);
-router.post('/me/verify-identity', userController.verifyIdentity);
+router.get('/me', authenticateToken, userController.getMe);
+router.patch('/me', authenticateToken, userController.updateMe);
+router.post('/me/verify-identity', authenticateToken, userController.verifyIdentity);
 
 // Admin uniquement
-router.get('/', userController.getAllUsers);
+router.get('/', authenticateToken, userController.getAllUsers);
 
 module.exports = router;
