@@ -19,7 +19,7 @@ const updateMe = async (req, res, next) => {
 
     // Filtrer les champs autorisés pour une auto-mise à jour
     const allowedUpdates = [
-      'nom', 'prenom', 'ville', 'telephone', 'avatar_url',
+      'nom', 'prenom', 'ville', 'telephone', 'avatar_url', 'charte_acceptee',
       'description_gardien', 'experience_animaux', 'type_logement',
       'jardin', 'animaux_acceptes', 'latitude', 'longitude', 'est_gardien',
       'description', 'tarif', 'type_de_garde', 'images_logement'
