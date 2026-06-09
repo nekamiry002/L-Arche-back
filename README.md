@@ -47,13 +47,15 @@ cp .env.example .env
 Édite `.env` avec tes identifiants Supabase :
 
 ```env
-SUPABASE_URL=https://mpjeevstdscslpachyrt.supabase.co
-SUPABASE_KEY=your_supabase_key_here
+SUPABASE_URL=https://xxx.supabase.co
+SUPABASE_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 PORT=3000
 NODE_ENV=development
-JWT_SECRET=your_jwt_secret_here
-CORS_ORIGIN=http://localhost:3000
+ALLOWED_ORIGINS=http://localhost:5173
 ```
+
+> `SUPABASE_SERVICE_ROLE_KEY` est requis pour la création de comptes et le ban d'utilisateurs.
 
 ## Démarrage
 
@@ -91,23 +93,21 @@ L-Arche-back/
 └── TODO.md                 # Plan d'implémentation
 ```
 
-## Points de terminaison disponibles
+## Points de terminaison
 
-### Santé du serveur
+Voir [ENDPOINTS.md](./ENDPOINTS.md) pour la liste complète et détaillée de toutes les routes.
 
-```
-GET /api/health
-```
-
-Retourne le statut du serveur.
-
-> ⚠️ **Autres endpoints**: À implémenter selon le plan dans [TODO.md](./TODO.md)
-
-## Prochaines étapes
-
-Consulte [TODO.md](./TODO.md) pour voir le plan complet d'implémentation du backend.
-
-**Prochaine phase**: Configuration Supabase et création des tables de base de données.
+Routes disponibles :
+- `/api/auth` — inscription, connexion, refresh, déconnexion
+- `/api/users` — profil, recherche gardiens, actions admin
+- `/api/animals` — CRUD animaux + upload photo
+- `/api/species` — espèces/races
+- `/api/reservations` — demandes de garde, gestion statuts
+- `/api/disponibilites` — créneaux disponibles des gardiens
+- `/api/reviews` — avis et notations
+- `/api/journaux` — journal de garde en temps réel
+- `/api/carnets-sante` — carnet de santé des animaux
+- `/api/signalements` — signalements utilisateurs
 
 ## Logs et débogage
 

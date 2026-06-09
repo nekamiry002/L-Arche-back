@@ -8,7 +8,15 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());
+const ALLOWED_ORIGINS = (process.env.ALLOWED_ORIGINS || 'http://localhost:5173').split(',');
+app.use(cors({
+  origin: (origin, callback) => {
+    // Autoriser les requêtes sans origin (ex: Postman, scripts node)
+    if (!origin || ALLOWED_ORIGINS.includes(origin)) return callback(null, true);
+    callback(new Error(`CORS: origin ${origin} non autorisée`));
+  },
+  credentials: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
