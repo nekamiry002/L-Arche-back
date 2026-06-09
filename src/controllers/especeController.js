@@ -26,10 +26,6 @@ const getEspece = async (req, res, next) => {
 // Créer une espèce ou race (Admin)
 const createEspece = async (req, res, next) => {
   try {
-    if (req.user.role !== 'admin') {
-      throw new ApiError('Accès refusé. Administrateurs uniquement.', 403);
-    }
-
     const { nom, categorie, description, besoins, conseils, image_url, a_savoir, race, espece_parente } = req.body;
     if (!nom) {
       throw new ApiError('Le nom de l\'espèce ou de la race est obligatoire', 400);
@@ -56,10 +52,6 @@ const createEspece = async (req, res, next) => {
 // Modifier une espèce ou race (Admin)
 const updateEspece = async (req, res, next) => {
   try {
-    if (req.user.role !== 'admin') {
-      throw new ApiError('Accès refusé. Administrateurs uniquement.', 403);
-    }
-
     const id = req.params.id;
     const allowedUpdates = ['nom', 'categorie', 'description', 'besoins', 'conseils', 'image_url', 'a_savoir', 'race', 'espece_parente'];
     const updates = {};
@@ -84,10 +76,6 @@ const updateEspece = async (req, res, next) => {
 // Supprimer une espèce ou race (Admin)
 const deleteEspece = async (req, res, next) => {
   try {
-    if (req.user.role !== 'admin') {
-      throw new ApiError('Accès refusé. Administrateurs uniquement.', 403);
-    }
-
     const id = req.params.id;
     await EspeceInfo.deleteEspeceInfo(id);
     res.json({ message: 'Espèce/Race supprimée avec succès' });

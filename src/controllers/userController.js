@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const { supabaseAdmin } = require('../config/supabase');
 const { ApiError } = require('../utils/errorHandler');
 
 // Récupérer le profil de l'utilisateur connecté
@@ -58,12 +59,42 @@ const verifyIdentity = async (req, res, next) => {
 // Admin: Récupérer tous les utilisateurs
 const getAllUsers = async (req, res, next) => {
   try {
-    if (req.user.role !== 'admin') {
-      throw new ApiError('Not authorized', 403);
-    }
     const { limit, offset } = req.query;
     const users = await User.getAllUsers(parseInt(limit) || 50, parseInt(offset) || 0);
     res.json(users);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Admin: bannir un utilisateur (désactive son compte Supabase Auth)
+const banUser = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    if (!supabaseAdmin) {
+      throw new ApiError('SUPABASE_SERVICE_ROLE_KEY requis pour cette opération', 500);
+    }
+
+    // Supabase Admin : bannir = durée de ban de 876 600 heures (100 ans)
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(id, {
+      ban_duration: '876600h',
+    });
+    if (error) return next(error);
+
+    await User.updateUser(id, { role: 'banni' });
+    res.json({ message: `Utilisateur ${id} banni avec succès` });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Admin: valider le profil gardien d'un utilisateur
+const verifyGardien = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const updated = await User.updateUser(id, { profil_gardien_verifie: true });
+    res.json({ message: 'Profil gardien vérifié', user: updated });
   } catch (err) {
     next(err);
   }
@@ -73,5 +104,7 @@ module.exports = {
   getMe,
   updateMe,
   verifyIdentity,
-  getAllUsers
+  getAllUsers,
+  banUser,
+  verifyGardien,
 };
