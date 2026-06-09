@@ -25,6 +25,7 @@ app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/animals', require('./routes/animalRoutes'));
 app.use('/api/species', require('./routes/especeRoutes'));
 app.use('/api/reservations', require('./routes/reservationRoutes'));
+app.use('/api/disponibilites', require('./routes/disponibiliteRoutes'));
 
 // Error handling middleware (doit être en dernier)
 app.use(errorHandler);
