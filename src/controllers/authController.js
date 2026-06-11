@@ -63,28 +63,16 @@ const refresh = async (req, res, next) => {
   }
 };
 
-const signout = async (req, res, next) => {
+const signout = async (req, res) => {
+  // Le client supprime déjà ses tokens localement.
+  // On essaie d'invalider la session Supabase, mais c'est best-effort.
   try {
-    // Prefer invalidating refresh tokens via admin if available
     const { user_id } = req.body;
     if (supabaseAdmin && user_id) {
-      const { error } = await supabaseAdmin.auth.admin.invalidateUserRefreshTokens(user_id);
-      if (error) return next(error);
-      return res.json({ ok: true });
+      await supabaseAdmin.auth.admin.signOut(user_id, 'global').catch(() => {});
     }
-
-    // Fallback: try to sign out using anon client if access token provided
-    const { access_token } = req.body;
-    if (access_token) {
-      const { error } = await supabase.auth.signOut();
-      if (error) return next(error);
-      return res.json({ ok: true });
-    }
-
-    throw new ApiError('user_id or access_token required to sign out', 400);
-  } catch (err) {
-    next(err);
-  }
+  } catch { /* ignore */ }
+  return res.json({ ok: true });
 };
 
 module.exports = {
