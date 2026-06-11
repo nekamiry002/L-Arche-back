@@ -1,9 +1,10 @@
-const { supabase } = require('../config/supabase');
+﻿const { supabase, supabaseAdmin } = require('../config/supabase');
+const db = supabaseAdmin || supabase;
 const { NotFoundError } = require('../utils/errorHandler');
 
-// Récupérer une info espèce/race par ID
+// RÃ©cupÃ©rer une info espÃ¨ce/race par ID
 const getEspeceInfoById = async (id) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('especes_infos')
     .select('*')
     .eq('id', id)
@@ -16,9 +17,9 @@ const getEspeceInfoById = async (id) => {
   return data;
 };
 
-// Récupérer toutes les espèces/races
+// RÃ©cupÃ©rer toutes les espÃ¨ces/races
 const getAllEspecesInfos = async (limit = 100, offset = 0) => {
-  const { data, error, count } = await supabase
+  const { data, error, count } = await db
     .from('especes_infos')
     .select('*', { count: 'exact' })
     .range(offset, offset + limit - 1);
@@ -28,9 +29,9 @@ const getAllEspecesInfos = async (limit = 100, offset = 0) => {
   return { data, total: count };
 };
 
-// Créer une info espèce/race
+// CrÃ©er une info espÃ¨ce/race
 const createEspeceInfo = async (especeData) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('especes_infos')
     .insert([
       {
@@ -53,9 +54,9 @@ const createEspeceInfo = async (especeData) => {
   return data;
 };
 
-// Mettre à jour une info espèce/race
+// Mettre Ã  jour une info espÃ¨ce/race
 const updateEspeceInfo = async (id, updates) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('especes_infos')
     .update(updates)
     .eq('id', id)
@@ -67,9 +68,9 @@ const updateEspeceInfo = async (id, updates) => {
   return data;
 };
 
-// Supprimer une info espèce/race
+// Supprimer une info espÃ¨ce/race
 const deleteEspeceInfo = async (id) => {
-  const { error } = await supabase
+  const { error } = await db
     .from('especes_infos')
     .delete()
     .eq('id', id);
@@ -84,3 +85,4 @@ module.exports = {
   updateEspeceInfo,
   deleteEspeceInfo,
 };
+

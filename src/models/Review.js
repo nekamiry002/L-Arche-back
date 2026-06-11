@@ -1,9 +1,10 @@
-const { supabase } = require('../config/supabase');
+﻿const { supabase, supabaseAdmin } = require('../config/supabase');
+const db = supabaseAdmin || supabase;
 const { NotFoundError } = require('../utils/errorHandler');
 
-// Récupérer un avis par ID
+// RÃ©cupÃ©rer un avis par ID
 const getReviewById = async (reviewId) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('avis')
     .select('*')
     .eq('id', reviewId)
@@ -16,9 +17,9 @@ const getReviewById = async (reviewId) => {
   return data;
 };
 
-// Récupérer les avis pour une personne (cible)
+// RÃ©cupÃ©rer les avis pour une personne (cible)
 const getReviewsByTargetId = async (cibleId, limit = 50, offset = 0) => {
-  const { data, error, count } = await supabase
+  const { data, error, count } = await db
     .from('avis')
     .select('*', { count: 'exact' })
     .eq('cible_id', cibleId)
@@ -30,9 +31,9 @@ const getReviewsByTargetId = async (cibleId, limit = 50, offset = 0) => {
   return { data, total: count };
 };
 
-// Récupérer les avis donnés par une personne (auteur)
+// RÃ©cupÃ©rer les avis donnÃ©s par une personne (auteur)
 const getReviewsByAuthorId = async (auteurId, limit = 50, offset = 0) => {
-  const { data, error, count } = await supabase
+  const { data, error, count } = await db
     .from('avis')
     .select('*', { count: 'exact' })
     .eq('auteur_id', auteurId)
@@ -44,9 +45,9 @@ const getReviewsByAuthorId = async (auteurId, limit = 50, offset = 0) => {
   return { data, total: count };
 };
 
-// Récupérer les avis pour une réservation spécifique
+// RÃ©cupÃ©rer les avis pour une rÃ©servation spÃ©cifique
 const getReviewsByReservationId = async (reservationId) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('avis')
     .select('*')
     .eq('reservation_id', reservationId);
@@ -56,9 +57,9 @@ const getReviewsByReservationId = async (reservationId) => {
   return data || [];
 };
 
-// Créer un avis
+// CrÃ©er un avis
 const createReview = async (reviewData) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('avis')
     .insert([
       {
@@ -78,9 +79,9 @@ const createReview = async (reviewData) => {
   return data;
 };
 
-// Mettre à jour un avis
+// Mettre Ã  jour un avis
 const updateReview = async (reviewId, updates) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('avis')
     .update(updates)
     .eq('id', reviewId)
@@ -94,7 +95,7 @@ const updateReview = async (reviewId, updates) => {
 
 // Supprimer un avis
 const deleteReview = async (reviewId) => {
-  const { error } = await supabase
+  const { error } = await db
     .from('avis')
     .delete()
     .eq('id', reviewId);
@@ -104,7 +105,7 @@ const deleteReview = async (reviewId) => {
 
 // Calculer la note moyenne d'une personne
 const calculateAverageRating = async (cibleId) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('avis')
     .select('note')
     .eq('cible_id', cibleId);
@@ -129,3 +130,4 @@ module.exports = {
   deleteReview,
   calculateAverageRating,
 };
+

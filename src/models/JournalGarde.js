@@ -1,8 +1,9 @@
-const { supabase } = require('../config/supabase');
+﻿const { supabase, supabaseAdmin } = require('../config/supabase');
+const db = supabaseAdmin || supabase;
 const { NotFoundError } = require('../utils/errorHandler');
 
 const getEntryById = async (id) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('journaux_garde')
     .select('*')
     .eq('id', id)
@@ -13,7 +14,7 @@ const getEntryById = async (id) => {
 };
 
 const getEntriesByReservation = async (reservationId, limit = 100, offset = 0) => {
-  const { data, error, count } = await supabase
+  const { data, error, count } = await db
     .from('journaux_garde')
     .select('*', { count: 'exact' })
     .eq('reservation_id', reservationId)
@@ -25,7 +26,7 @@ const getEntriesByReservation = async (reservationId, limit = 100, offset = 0) =
 };
 
 const createEntry = async (entry) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('journaux_garde')
     .insert([{
       reservation_id: entry.reservation_id,
@@ -42,7 +43,7 @@ const createEntry = async (entry) => {
 };
 
 const deleteEntry = async (id) => {
-  const { error } = await supabase
+  const { error } = await db
     .from('journaux_garde')
     .delete()
     .eq('id', id);
@@ -51,3 +52,4 @@ const deleteEntry = async (id) => {
 };
 
 module.exports = { getEntryById, getEntriesByReservation, createEntry, deleteEntry };
+

@@ -1,9 +1,11 @@
-const { supabase } = require('../config/supabase');
+const { supabase, supabaseAdmin } = require('../config/supabase');
 const { NotFoundError } = require('../utils/errorHandler');
+
+const db = supabaseAdmin || supabase;
 
 // Récupérer un animal par ID
 const getAnimalById = async (animalId) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('animaux')
     .select('*')
     .eq('id', animalId)
@@ -18,7 +20,7 @@ const getAnimalById = async (animalId) => {
 
 // Récupérer tous les animaux d'un propriétaire
 const getAnimalsByOwnerId = async (proprietaireId, limit = 50, offset = 0) => {
-  const { data, error, count } = await supabase
+  const { data, error, count } = await db
     .from('animaux')
     .select('*', { count: 'exact' })
     .eq('proprietaire_id', proprietaireId)
@@ -31,7 +33,7 @@ const getAnimalsByOwnerId = async (proprietaireId, limit = 50, offset = 0) => {
 
 // Créer un animal
 const createAnimal = async (animalData) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('animaux')
     .insert([
       {
@@ -58,7 +60,7 @@ const createAnimal = async (animalData) => {
 
 // Mettre à jour un animal
 const updateAnimal = async (animalId, updates) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('animaux')
     .update(updates)
     .eq('id', animalId)
@@ -72,7 +74,7 @@ const updateAnimal = async (animalId, updates) => {
 
 // Supprimer un animal
 const deleteAnimal = async (animalId) => {
-  const { error } = await supabase
+  const { error } = await db
     .from('animaux')
     .delete()
     .eq('id', animalId);

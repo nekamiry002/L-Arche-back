@@ -1,4 +1,5 @@
-const { supabase } = require('../config/supabase');
+const { supabase, supabaseAdmin } = require('../config/supabase');
+const db = supabaseAdmin || supabase;
 const { NotFoundError } = require('../utils/errorHandler');
 
 // Champs publics renvoyés pour un gardien
@@ -23,7 +24,7 @@ const searchGardiens = async (req, res, next) => {
       offset = 0,
     } = req.query;
 
-    let query = supabase
+    let query = db
       .from('utilisateurs')
       .select(PUBLIC_FIELDS + ', created_at', { count: 'exact' })
       .eq('est_gardien', true)
@@ -73,7 +74,7 @@ const getGardienProfile = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    const { data, error } = await supabase
+    const { data, error } = await db
       .from('utilisateurs')
       .select(PUBLIC_FIELDS)
       .eq('id', id)

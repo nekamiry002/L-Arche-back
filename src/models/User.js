@@ -1,10 +1,13 @@
-const { supabase } = require('../config/supabase');
-const { supabaseAdmin } = require('../config/supabase');
+const { supabase, supabaseAdmin } = require('../config/supabase');
 const { NotFoundError, ConflictError } = require('../utils/errorHandler');
+
+// Le back gère lui-même l'auth via son middleware — on utilise supabaseAdmin
+// pour bypasser le RLS Supabase (évite les blocages si RLS est activé sur la table).
+const db = supabaseAdmin || supabase;
 
 // Récupérer un utilisateur par ID
 const getUserById = async (userId) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('utilisateurs')
     .select('*')
     .eq('id', userId)
@@ -19,7 +22,7 @@ const getUserById = async (userId) => {
 
 // Récupérer tous les utilisateurs
 const getAllUsers = async (limit = 50, offset = 0) => {
-  const { data, error, count } = await supabase
+  const { data, error, count } = await db
     .from('utilisateurs')
     .select('*', { count: 'exact' })
     .range(offset, offset + limit - 1);
@@ -31,7 +34,7 @@ const getAllUsers = async (limit = 50, offset = 0) => {
 
 // Créer un utilisateur (profil après inscription Supabase Auth)
 const createUser = async (userId, userData) => {
-  const { data, error } = await supabaseAdmin
+  const { data, error } = await db
     .from('utilisateurs')
     .insert([
       {
@@ -59,7 +62,7 @@ const createUser = async (userId, userData) => {
 
 // Mettre à jour un utilisateur
 const updateUser = async (userId, updates) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('utilisateurs')
     .update(updates)
     .eq('id', userId)
@@ -73,7 +76,7 @@ const updateUser = async (userId, updates) => {
 
 // Supprimer un utilisateur
 const deleteUser = async (userId) => {
-  const { error } = await supabase
+  const { error } = await db
     .from('utilisateurs')
     .delete()
     .eq('id', userId);

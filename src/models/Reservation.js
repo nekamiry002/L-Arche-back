@@ -1,9 +1,10 @@
-const { supabase } = require('../config/supabase');
+﻿const { supabase, supabaseAdmin } = require('../config/supabase');
+const db = supabaseAdmin || supabase;
 const { NotFoundError } = require('../utils/errorHandler');
 
-// Récupérer une réservation par ID
+// RÃ©cupÃ©rer une rÃ©servation par ID
 const getReservationById = async (reservationId) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('reservations')
     .select('*')
     .eq('id', reservationId)
@@ -16,9 +17,9 @@ const getReservationById = async (reservationId) => {
   return data;
 };
 
-// Récupérer les réservations d'un propriétaire
+// RÃ©cupÃ©rer les rÃ©servations d'un propriÃ©taire
 const getReservationsByOwnerId = async (proprietaireId, limit = 50, offset = 0) => {
-  const { data, error, count } = await supabase
+  const { data, error, count } = await db
     .from('reservations')
     .select('*', { count: 'exact' })
     .eq('proprietaire_id', proprietaireId)
@@ -29,9 +30,9 @@ const getReservationsByOwnerId = async (proprietaireId, limit = 50, offset = 0) 
   return { data, total: count };
 };
 
-// Récupérer les réservations d'un gardien
+// RÃ©cupÃ©rer les rÃ©servations d'un gardien
 const getReservationsByGardierId = async (gardierId, limit = 50, offset = 0) => {
-  const { data, error, count } = await supabase
+  const { data, error, count } = await db
     .from('reservations')
     .select('*', { count: 'exact' })
     .eq('gardien_id', gardierId)
@@ -42,9 +43,9 @@ const getReservationsByGardierId = async (gardierId, limit = 50, offset = 0) => 
   return { data, total: count };
 };
 
-// Créer une réservation
+// CrÃ©er une rÃ©servation
 const createReservation = async (reservationData) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('reservations')
     .insert([
       {
@@ -66,9 +67,9 @@ const createReservation = async (reservationData) => {
   return data;
 };
 
-// Mettre à jour une réservation
+// Mettre Ã  jour une rÃ©servation
 const updateReservation = async (reservationId, updates) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('reservations')
     .update(updates)
     .eq('id', reservationId)
@@ -80,24 +81,24 @@ const updateReservation = async (reservationId, updates) => {
   return data;
 };
 
-// Annuler une réservation
+// Annuler une rÃ©servation
 const cancelReservation = async (reservationId) => {
   return updateReservation(reservationId, { statut: 'annulee' });
 };
 
-// Confirmer une réservation
+// Confirmer une rÃ©servation
 const confirmReservation = async (reservationId) => {
   return updateReservation(reservationId, { statut: 'confirmee' });
 };
 
-// Marquer une réservation comme terminée
+// Marquer une rÃ©servation comme terminÃ©e
 const completeReservation = async (reservationId) => {
   return updateReservation(reservationId, { statut: 'terminee' });
 };
 
-// Supprimer une réservation
+// Supprimer une rÃ©servation
 const deleteReservation = async (reservationId) => {
-  const { error } = await supabase
+  const { error } = await db
     .from('reservations')
     .delete()
     .eq('id', reservationId);
@@ -116,3 +117,4 @@ module.exports = {
   completeReservation,
   deleteReservation,
 };
+

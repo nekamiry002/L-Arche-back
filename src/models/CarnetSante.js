@@ -1,10 +1,11 @@
-const { supabase } = require('../config/supabase');
+﻿const { supabase, supabaseAdmin } = require('../config/supabase');
+const db = supabaseAdmin || supabase;
 const { NotFoundError } = require('../utils/errorHandler');
 
 const TYPES_DOCUMENT = ['vaccin', 'traitement', 'visite', 'autre'];
 
 const getEntryById = async (id) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('carnets_sante')
     .select('*')
     .eq('id', id)
@@ -15,7 +16,7 @@ const getEntryById = async (id) => {
 };
 
 const getEntriesByAnimal = async (animalId, limit = 50, offset = 0) => {
-  const { data, error, count } = await supabase
+  const { data, error, count } = await db
     .from('carnets_sante')
     .select('*', { count: 'exact' })
     .eq('animal_id', animalId)
@@ -27,7 +28,7 @@ const getEntriesByAnimal = async (animalId, limit = 50, offset = 0) => {
 };
 
 const createEntry = async (entry) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('carnets_sante')
     .insert([{
       animal_id: entry.animal_id,
@@ -44,7 +45,7 @@ const createEntry = async (entry) => {
 };
 
 const deleteEntry = async (id) => {
-  const { error } = await supabase
+  const { error } = await db
     .from('carnets_sante')
     .delete()
     .eq('id', id);
@@ -53,3 +54,4 @@ const deleteEntry = async (id) => {
 };
 
 module.exports = { getEntryById, getEntriesByAnimal, createEntry, deleteEntry, TYPES_DOCUMENT };
+

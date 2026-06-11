@@ -1,10 +1,11 @@
-const { supabase } = require('../config/supabase');
+﻿const { supabase, supabaseAdmin } = require('../config/supabase');
+const db = supabaseAdmin || supabase;
 const { NotFoundError } = require('../utils/errorHandler');
 
 const STATUTS = ['ouvert', 'traite', 'ferme'];
 
 const getSignalementById = async (id) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('signalements')
     .select('*')
     .eq('id', id)
@@ -15,7 +16,7 @@ const getSignalementById = async (id) => {
 };
 
 const getSignalementsBySignaleur = async (signaleurId, limit = 50, offset = 0) => {
-  const { data, error, count } = await supabase
+  const { data, error, count } = await db
     .from('signalements')
     .select('*', { count: 'exact' })
     .eq('signaleur_id', signaleurId)
@@ -27,7 +28,7 @@ const getSignalementsBySignaleur = async (signaleurId, limit = 50, offset = 0) =
 };
 
 const getAllSignalements = async (limit = 50, offset = 0, statut = null) => {
-  let query = supabase
+  let query = db
     .from('signalements')
     .select('*', { count: 'exact' })
     .order('created_at', { ascending: false })
@@ -41,7 +42,7 @@ const getAllSignalements = async (limit = 50, offset = 0, statut = null) => {
 };
 
 const createSignalement = async (sig) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('signalements')
     .insert([{
       signaleur_id: sig.signaleur_id,
@@ -59,7 +60,7 @@ const createSignalement = async (sig) => {
 };
 
 const updateStatut = async (id, statut) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('signalements')
     .update({ statut })
     .eq('id', id)
@@ -71,3 +72,4 @@ const updateStatut = async (id, statut) => {
 };
 
 module.exports = { getSignalementById, getSignalementsBySignaleur, getAllSignalements, createSignalement, updateStatut, STATUTS };
+

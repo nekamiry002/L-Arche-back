@@ -1,8 +1,9 @@
-const { supabase } = require('../config/supabase');
+﻿const { supabase, supabaseAdmin } = require('../config/supabase');
+const db = supabaseAdmin || supabase;
 const { NotFoundError } = require('../utils/errorHandler');
 
 const getDisponibiliteById = async (id) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('disponibilites')
     .select('*')
     .eq('id', id)
@@ -13,7 +14,7 @@ const getDisponibiliteById = async (id) => {
 };
 
 const getDisponibilitesByUser = async (userId, limit = 50, offset = 0) => {
-  const { data, error, count } = await supabase
+  const { data, error, count } = await db
     .from('disponibilites')
     .select('*', { count: 'exact' })
     .eq('utilisateur_id', userId)
@@ -25,7 +26,7 @@ const getDisponibilitesByUser = async (userId, limit = 50, offset = 0) => {
 };
 
 const createDisponibilite = async (dispo) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('disponibilites')
     .insert([{
       utilisateur_id: dispo.utilisateur_id,
@@ -41,7 +42,7 @@ const createDisponibilite = async (dispo) => {
 };
 
 const updateDisponibilite = async (id, updates) => {
-  const { data, error } = await supabase
+  const { data, error } = await db
     .from('disponibilites')
     .update(updates)
     .eq('id', id)
@@ -53,7 +54,7 @@ const updateDisponibilite = async (id, updates) => {
 };
 
 const deleteDisponibilite = async (id) => {
-  const { error } = await supabase
+  const { error } = await db
     .from('disponibilites')
     .delete()
     .eq('id', id);
@@ -68,3 +69,4 @@ module.exports = {
   updateDisponibilite,
   deleteDisponibilite,
 };
+
