@@ -184,5 +184,21 @@ module.exports = {
   createBooking,
   confirmBooking,
   cancelBooking,
-  completeBooking
+  completeBooking,
+  getAllBookingsAdmin,
 };
+
+// GET /api/reservations/all — toutes les réservations (admin)
+async function getAllBookingsAdmin(req, res, next) {
+  try {
+    const { limit, offset, statut } = req.query;
+    const result = await Reservation.getAllReservations(
+      parseInt(limit) || 50,
+      parseInt(offset) || 0,
+      statut || null
+    );
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+}

@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const reservationController = require('../controllers/reservationController');
 const { authenticateToken } = require('../middleware/auth');
+const { requireAdmin } = require('../middleware/requireAdmin');
+
+// Admin: toutes les réservations
+router.get('/all', authenticateToken, requireAdmin, reservationController.getAllBookingsAdmin);
 
 // Toutes les routes réservations nécessitent d'être connecté
 router.use(authenticateToken);

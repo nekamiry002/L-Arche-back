@@ -38,6 +38,7 @@ app.use('/api/reviews', require('./routes/reviewRoutes'));
 app.use('/api/journaux', require('./routes/journalRoutes'));
 app.use('/api/carnets-sante', require('./routes/carnetSanteRoutes'));
 app.use('/api/signalements', require('./routes/signalementRoutes'));
+app.use('/api/produits',    require('./routes/produitRoutes'));
 
 // Error handling middleware (doit être en dernier)
 app.use(errorHandler);

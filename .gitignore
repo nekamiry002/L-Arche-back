@@ -17,3 +17,5 @@ yarn-error.log*
 TODO.md
 SETUP.md
 temp_tests/
+playwright-report/
+test-results/

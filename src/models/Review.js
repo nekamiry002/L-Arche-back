@@ -120,6 +120,19 @@ const calculateAverageRating = async (cibleId) => {
   return { average: Math.round(average * 100) / 100, count: data.length };
 };
 
+// Récupérer tous les avis (admin)
+const getAllReviews = async (limit = 50, offset = 0) => {
+  const { data, error, count } = await db
+    .from('avis')
+    .select('*', { count: 'exact' })
+    .range(offset, offset + limit - 1)
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+
+  return { data, total: count };
+};
+
 module.exports = {
   getReviewById,
   getReviewsByTargetId,
@@ -129,5 +142,6 @@ module.exports = {
   updateReview,
   deleteReview,
   calculateAverageRating,
+  getAllReviews,
 };
 

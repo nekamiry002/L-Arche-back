@@ -106,6 +106,22 @@ const deleteReservation = async (reservationId) => {
   if (error) throw error;
 };
 
+// Récupérer toutes les réservations (admin)
+const getAllReservations = async (limit = 50, offset = 0, statut = null) => {
+  let query = db
+    .from('reservations')
+    .select('*', { count: 'exact' })
+    .range(offset, offset + limit - 1)
+    .order('created_at', { ascending: false });
+
+  if (statut) query = query.eq('statut', statut);
+
+  const { data, error, count } = await query;
+  if (error) throw error;
+
+  return { data, total: count };
+};
+
 module.exports = {
   getReservationById,
   getReservationsByOwnerId,
@@ -116,5 +132,6 @@ module.exports = {
   confirmReservation,
   completeReservation,
   deleteReservation,
+  getAllReservations,
 };
 

@@ -123,4 +123,18 @@ async function recalculateRating(cibleId) {
     .eq('id', cibleId);
 }
 
-module.exports = { getReviewsForUser, getMyReviews, createReview, deleteReview };
+// GET /api/reviews — tous les avis (admin)
+const getAllReviews = async (req, res, next) => {
+  try {
+    const { limit, offset } = req.query;
+    const result = await Review.getAllReviews(
+      parseInt(limit) || 50,
+      parseInt(offset) || 0
+    );
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { getReviewsForUser, getMyReviews, createReview, deleteReview, getAllReviews };

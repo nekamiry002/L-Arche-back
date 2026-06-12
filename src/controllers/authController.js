@@ -20,7 +20,9 @@ const signup = async (req, res, next) => {
       email_confirm: true,
     });
 
-    if (error) return next(error);
+    if (error) {
+      return res.status(error.status || 400).json({ error: { message: error.message, statusCode: error.status || 400 } });
+    }
 
     const userId = data?.user?.id || data?.id;
     if (!userId) throw new ApiError('Unable to create user', 500);
@@ -41,7 +43,9 @@ const signin = async (req, res, next) => {
 
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-    if (error) return next(error);
+    if (error) {
+      return res.status(error.status || 401).json({ error: { message: 'Email ou mot de passe incorrect', statusCode: error.status || 401 } });
+    }
 
     return res.json(data);
   } catch (err) {
