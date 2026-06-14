@@ -44,7 +44,7 @@ const signin = async (req, res, next) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
-      return res.status(error.status || 401).json({ error: { message: 'Email ou mot de passe incorrect', statusCode: error.status || 401 } });
+      return res.status(401).json({ error: { message: 'Email ou mot de passe incorrect', statusCode: 401 } });
     }
 
     return res.json(data);
